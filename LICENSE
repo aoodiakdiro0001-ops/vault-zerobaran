@@ -1,0 +1,44 @@
+ ============================================================
+  Vault-ZeroBaran  —  Self-Knowledge Brain for Documents
+  Copyright (C) 2025  Baran Avisat  (All rights reserved)
+ ============================================================
+
+This software — "Vault-ZeroBaran" — including all source code,
+documentation, configuration files, pipelines, UI components, the
+Telegram bot, the Streamlit dashboard, the RAG core, the ingestion
+layer, the vectorization layer, and every accompanying script — is
+the original intellectual work of its author.
+
+PROPRIETARY LICENSE — RESERVED RIGHTS
+-------------------------------------
+1. The source code is provided to you for personal and internal
+   business use only.
+2. You may NOT redistribute, resell, sublicense, repackage, host as
+   a paid SaaS, or commercially relicense this project — in whole or
+   in part — without the explicit written permission of the author.
+3. You may modify the code for your own use, but you may not remove
+   or alter the copyright notices, the OWNER_NAME / OWNER_HANDLE
+   fields, or the support / attribution block shown in the UI and in
+   the bot responses.
+4. The "Vault-ZeroBaran" name, the project logo, and the architectural
+   layout are protected as the author's identifying marks.
+
+FREE TIER NOTICE
+----------------
+This project is designed to operate 100% on free-tier services
+(GitHub Actions, Supabase Free, Gemini API Free, Groq Free,
+Telegram Bot API). The author of Vault-ZeroBaran is not affiliated
+with any of those providers and is not responsible for their
+quota changes or pricing decisions.
+
+SUPPORT & CONTACT
+-----------------
+For support, integration help, or commercial licensing requests:
+  Owner:   Baran Avisat
+  Email:   Baranavisat@gmail.com
+  WhatsApp: +90 531 326 37 22
+
+NO WARRANTY
+-----------
+The software is provided "AS IS", without warranty of any kind.
+Use at your own risk.

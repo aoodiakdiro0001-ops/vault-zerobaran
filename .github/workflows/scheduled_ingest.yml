@@ -1,0 +1,74 @@
+# ============================================================
+#  Vault-ZeroBaran — Scheduled Ingestion via GitHub Actions
+#  Runs every 6 hours (free tier), scans ./data/uploads,
+#  embeds any new/changed files, and stores them in Supabase.
+# ============================================================
+name: Vault-ZeroBaran Scheduled Ingest
+
+on:
+  schedule:
+    # Every 6 hours — free tier max frequency is 5 minutes
+    - cron: "0 */6 * * *"
+  workflow_dispatch:    # Manual trigger from the Actions tab
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
+      GROQ_API_KEY:         ${{ secrets.GROQ_API_KEY }}
+      SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY:         ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_DB_URL:      ${{ secrets.SUPABASE_DB_URL }}
+      TELEGRAM_BOT_TOKEN:   ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+      VAULT_DATA_DIR:       ./data/uploads
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🗄️ Initialize Supabase schema
+        run: |
+          python scripts/ingest_folder.py --init-db
+
+      - name: 📂 Sync uploaded files (from repo ./data/uploads)
+        run: |
+          # Place new files under ./data/uploads before pushing,
+          # or use a separate data branch.
+          if [ -d "./data/uploads" ] && [ "$(ls -A ./data/uploads)" ]; then
+            echo "Found files to ingest:"
+            ls -la ./data/uploads
+            python scripts/ingest_folder.py --folder ./data/uploads
+          else
+            echo "No new files in ./data/uploads — skipping ingest step."
+          fi
+
+      - name: 📊 Print vault statistics
+        run: |
+          python - <<'EOF'
+          import sys
+          sys.path.insert(0, ".")
+          from core.vector_db import total_chunks, list_documents
+          print(f"Total chunks in vault: {total_chunks()}")
+          for d in list_documents():
+              print(f"  • {d['source_file']}: {d['chunks']} chunks, ~{d['tokens']} tokens")
+          EOF
+
+      - name: 🧹 Cleanup
+        if: always()
+        run: |
+          echo "Scheduled run finished at $(date -u)"
