@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Vault-ZeroBaran — White Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0a0e1a;
+    --bg2:       #11172a;
+    --bg3:       #161b2e;
+    --accent:    #06b6d4;
+    --accent2:   #0ea5e9;
+    --accent3:   #6366f1;
+    --text:      #e6edf3;
+    --text-mute: #8b949e;
+    --line:      #21262d;
+    --success:   #10b981;
+    --warn:      #f59e0b;
+  }
+  @page { size: A4; margin: 0; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg);
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    color: var(--text); font-size: 11pt; line-height: 1.6;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; min-height: 297mm; padding: 14mm 14mm;
+    box-sizing: border-box; position: relative; page-break-after: always;
+    background: var(--bg);
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ---- COVER ---- */
+  .cover {
+    background:
+      radial-gradient(ellipse at top right, rgba(6,182,212,.18), transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(99,102,241,.12), transparent 50%),
+      var(--bg);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 22mm 18mm;
+  }
+  .cover-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+  .cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt; letter-spacing: 1px;
+  }
+  .brand-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: white;
+  }
+  .cover-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 9pt;
+    color: var(--text-mute); border: 1px solid var(--line);
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .cover-center { margin-top: 30mm; }
+  .cover-eyebrow {
+    color: var(--accent); font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt; letter-spacing: 3px; margin-bottom: 8mm;
+  }
+  .cover-title {
+    font-family: 'Cairo', sans-serif; font-weight: 900;
+    font-size: 48pt; line-height: 1.1; margin: 0;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cover-sub {
+    font-size: 16pt; color: var(--text-mute); margin-top: 8mm;
+    font-weight: 500; line-height: 1.4; max-width: 140mm;
+  }
+  .cover-badges { display: flex; gap: 8px; margin-top: 10mm; flex-wrap: wrap; }
+  .badge {
+    background: var(--bg2); border: 1px solid var(--line);
+    padding: 6px 14px; border-radius: 6px;
+    font-size: 9pt; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+  }
+  .cover-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6mm;
+    margin-top: 14mm; padding-top: 14mm; border-top: 1px solid var(--line);
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 22pt; font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-lbl { color: var(--text-mute); font-size: 9pt; margin-top: 2mm; }
+  .cover-foot {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 9pt; color: var(--text-mute); font-family: 'JetBrains Mono', monospace;
+  }
+  .cover-foot .owner { color: var(--text); }
+  .cover-foot .owner b { color: var(--accent); }
+
+  /* ---- BODY PAGES ---- */
+  .page-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 6mm; margin-bottom: 6mm; border-bottom: 1px solid var(--line);
+  }
+  .page-head .crumb {
+    font-family: 'JetBrains Mono', monospace; color: var(--accent);
+    font-size: 9pt; letter-spacing: 1px;
+  }
+  .page-head .page-num { color: var(--text-mute); font-size: 9pt; }
+  h2.section {
+    font-family: 'Cairo', sans-serif; font-size: 20pt; font-weight: 700;
+    color: var(--accent); margin: 0 0 4mm 0;
+  }
+  h3.sub {
+    font-family: 'Cairo', sans-serif; font-size: 13pt; font-weight: 700;
+    color: var(--text); margin: 6mm 0 3mm 0;
+  }
+  p { margin: 0 0 3mm 0; color: var(--text); }
+  p.lead { font-size: 12pt; color: var(--text-mute); }
+  .small { color: var(--text-mute); font-size: 9pt; }
+  code, .mono { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 10pt; }
+
+  /* table */
+  table {
+    width: 100%; border-collapse: collapse; margin: 4mm 0 6mm 0;
+    font-size: 10pt;
+  }
+  th, td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg2); color: var(--accent); font-weight: 700; }
+  td:first-child { color: var(--accent2); font-family: 'JetBrains Mono', monospace; }
+  tr:hover td { background: rgba(6,182,212,0.04); }
+
+  /* layers diagram */
+  .layers { display: flex; flex-direction: column; gap: 3mm; margin: 4mm 0; }
+  .layer {
+    background: var(--bg2); border-right: 3px solid var(--accent);
+    padding: 3.5mm 5mm; border-radius: 6px;
+    display: grid; grid-template-columns: 50px 1fr; gap: 4mm; align-items: center;
+  }
+  .layer-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 18pt;
+    font-weight: 700; color: var(--accent3); text-align: center;
+  }
+  .layer-title { font-weight: 700; font-size: 11pt; color: var(--text); margin-bottom: 0.5mm; }
+  .layer-tech { font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; color: var(--accent); }
+  .layer-desc { color: var(--text-mute); font-size: 9pt; margin-top: 1mm; line-height: 1.45; }
+
+  /* workflow arrow */
+  .flow { display: flex; flex-direction: column; gap: 1.5mm; margin: 3mm 0; }
+  .flow-step {
+    background: var(--bg2); border: 1px solid var(--line);
+    padding: 2.5mm 5mm; border-radius: 6px; font-size: 9.5pt;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .flow-num {
+    background: var(--accent); color: var(--bg); width: 24px; height: 24px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 10pt; flex-shrink: 0;
+  }
+  .flow-arrow { text-align: center; color: var(--accent); font-size: 10pt; line-height: 1; }
+
+  /* feature cards */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 4mm 0; }
+  .feat {
+    background: var(--bg2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 4mm 5mm;
+  }
+  .feat-icon { font-size: 16pt; margin-bottom: 1mm; }
+  .feat-title { font-weight: 700; color: var(--accent); margin-bottom: 1.5mm; font-size: 10.5pt; }
+  .feat-text { color: var(--text-mute); font-size: 9pt; line-height: 1.45; }
+
+  /* code block */
+  pre.code {
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 6px; padding: 4mm 5mm;
+    font-family: 'JetBrains Mono', monospace; font-size: 9pt;
+    color: var(--text); overflow: hidden;
+    direction: ltr; text-align: left;
+    line-height: 1.6;
+  }
+  pre.code .c { color: var(--text-mute); }
+  pre.code .k { color: var(--accent3); }
+  pre.code .s { color: var(--success); }
+
+  /* footer bar */
+  .foot-bar {
+    position: absolute; bottom: 8mm; left: 14mm; right: 14mm;
+    display: flex; justify-content: space-between;
+    padding-top: 3mm; border-top: 1px solid var(--line);
+    font-size: 8pt; color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 — COVER ============ -->
+<section class="page cover">
+  <div class="cover-grid"></div>
+
+  <div class="cover-top">
+    <div class="brand">
+      <div class="brand-logo">🧠</div>
+      <span>VAULT-ZEROBARAN</span>
+    </div>
+    <div class="cover-tag">v1.0 · WHITE PAPER</div>
+  </div>
+
+  <div class="cover-center">
+    <div class="cover-eyebrow">SELF-KNOWLEDGE BRAIN · 100% FREE STACK</div>
+    <h1 class="cover-title">Vault-ZeroBaran</h1>
+    <p class="cover-sub">العقل المعرفي الذاتي واللامركزي للشركات والمستندات — محرك بحث واستخراج معرفي ذكي يعمل كـ Second Brain بموارد مجانية بالكامل.</p>
+
+    <div class="cover-badges">
+      <span class="badge">PYTHON 3.11+</span>
+      <span class="badge">SUPABASE · PGVECTOR</span>
+      <span class="badge">GEMINI API</span>
+      <span class="badge">GROQ</span>
+      <span class="badge">TELEGRAM BOT</span>
+      <span class="badge">STREAMLIT</span>
+      <span class="badge">GITHUB ACTIONS</span>
+    </div>
+
+    <div class="cover-stats">
+      <div class="stat"><div class="stat-num">0$</div><div class="stat-lbl">التكلفة الشهرية</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">طبقات برمجية</div></div>
+      <div class="stat"><div class="stat-num">768</div><div class="stat-lbl">أبعاد المتجهات</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">الملفات المدعومة</div></div>
+    </div>
+  </div>
+
+  <div class="cover-foot">
+    <div>
+      <div class="small">PROPRIETARY · ALL RIGHTS RESERVED</div>
+      <div class="owner"><b>Vault-ZeroBaran</b> © 2025 · Baran Avisat</div>
+    </div>
+    <div style="text-align: left;">
+      <div class="small">WHITE PAPER · ARABIC</div>
+      <div>vault-zerobaran · 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAGE 2 — OVERVIEW + TECH STACK ============ -->
+<section class="page">
+  <div class="page-head">
+    <div class="crumb">02 / OVERVIEW · TECH STACK</div>
+    <div class="page-num">صفحة 2 / 5</div>
+  </div>
+
+  <h2 class="section">نظرة عامة على المشروع</h2>
+  <p class="lead">Vault-ZeroBaran هو محرك بحث واستخراج معرفي ذكي جداً يعمل كـ Second Brain للمؤسسات والأفراد. يقرأ جميع ملفاتك ووثائقك (PDFs، Word، Excel، نصوص، أكواد برمجية)، يؤرشف بياناتها دلالياً، ويجيب فوراً عن أي سؤال معقد بناءً على مستنداتك الخاصة مع ذكر اسم الملف والصفحة الدقيقة كمصدر — دون دفع دولار واحد لأي أداة مدفوعة.</p>
+
+  <h3 class="sub">لماذا تتمنى كل شركة الحصول عليه؟</h3>
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">💰</div>
+      <div class="feat-title">توفير مال فلكي</div>
+      <div class="feat-text">أدوات إدارة المعرفة المدفوعة تكلف الشركات ثروات سنوياً. هذا النظام يؤدي نفس الغرض باحترافية وبتكلفة صفر.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">وصول لحظي للمعلومة</div>
+      <div class="feat-text">بدلاً من قضاء ساعات في البحث بين مئات الملفات، تسأل النظام سؤالاً فيجيبك بالإجابة الدقيقة خلال ثوانٍ.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔐</div>
+      <div class="feat-title">السيادة والسرية المطلقة</div>
+      <div class="feat-text">ملفاتك وعقودك لا تُدرب عليها أي نماذج خارجية. كل شيء يُحفظ في بيئة مشفرة خاصة بك في Supabase.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🌐</div>
+      <div class="feat-title">واجهتان متكاملتان</div>
+      <div class="feat-text">بوت تليجرام للوصول الفوري من الهاتف + لوحة Streamlit للإدارة المرئية + CLI للأتمتة.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">الموارد المجانية البحتة المستخدمة</h3>
+  <table>
+    <thead>
+      <tr><th>المكون</th><th>التقنية المجانية</th><th>الدور</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>المجدول (Cron)</td><td>GitHub Actions</td><td>خادم مجاني لفحص الملفات الجديدة دورياً كل 6 ساعات.</td></tr>
+      <tr><td>استخراج النصوص</td><td>Python + PyMuPDF</td><td>تفريغ النصوص من PDF / DOCX / XLSX وتقطيعها لأجزاء دلالية.</td></tr>
+      <tr><td>قاعدة المتجهات</td><td>Supabase + pgvector</td><td>تخزين المتجهات الرياضية للبحث الدلالي السريع جداً.</td></tr>
+      <tr><td>محرك التضمين</td><td>Gemini text-embedding-004</td><td>تحويل الفقرات النصية إلى متجهات 768-أبعاد مجاناً.</td></tr>
+      <tr><td>الاستدلال الذكي</td><td>Gemini 1.5 Flash / Groq</td><td>صياغة الإجابة الدقيقة بناءً على المصادر المسترجعة.</td></tr>
+      <tr><td>قناة الواجهة</td><td>Telegram Bot + Streamlit</td><td>رفع الملفات وطرح الأسئلة واستلام الإجابات مع المصادر.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot-bar">
+    <span>Vault-ZeroBaran · White Paper</span>
+    <span>© 2025 · Proprietary</span>
+  </div>
+</section>
+
+<!-- ============ PAGE 3 — ARCHITECTURE ============ -->
+<section class="page">
+  <div class="page-head">
+    <div class="crumb">03 / ARCHITECTURE · LAYERS</div>
+    <div class="page-num">صفحة 3 / 5</div>
+  </div>
+
+  <h2 class="section">البنية البرمجية — الطبقات الأربع</h2>
+  <p>يتكون النظام من 4 طبقات برمجية ذكية تتناغم لتعمل كمخ رقمي شامل، وكل طبقة مسؤولة عن مهمة محددة بدقة.</p>
+
+  <div class="layers">
+    <div class="layer">
+      <div class="layer-num">4</div>
+      <div>
+        <div class="layer-title">طبقة التوصيل والاستعلام (Delivery & UI)</div>
+        <div class="layer-tech">Telegram Bot · Streamlit Dashboard · CLI</div>
+        <div class="layer-desc">يرسل لك الإجابة الفورية المنسقة على هاتفك أو لوحة الويب: الإجابة + اسم الملف + رقم الصفحة + نسبة التطابق.</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-num">3</div>
+      <div>
+        <div class="layer-title">محرك الاسترجاع والإجابة (RAG Core)</div>
+        <div class="layer-tech">Gemini 1.5 Flash · Groq Llama-3.1-8b · Prompt Engineering</div>
+        <div class="layer-desc">عند طرح أي سؤال، يفتش النظام عن أكثر الفقرات صلة داخل Supabase، يمررها لـ Gemini مع أمر دقيق: "أجب عن السؤال بناءً على المرفقات فقط وذكر المصدر".</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-num">2</div>
+      <div>
+        <div class="layer-title">العقل الدلالي والتضمين (Vectorization)</div>
+        <div class="layer-tech">Gemini text-embedding-004 · Supabase pgvector · HNSW Index</div>
+        <div class="layer-desc">تحويل الفقرات النصية إلى متجهات رقمية 768-أبعاد، وتخزينها في قاعدة بيانات سحابية مجانية لتسهيل البحث الدلالي الشبيه بـ Google.</div>
+      </div>
+    </div>
+    <div class="layer">
+      <div class="layer-num">1</div>
+      <div>
+        <div class="layer-title">طبقة الفهرسة والتفريغ (Ingestion & Chunking)</div>
+        <div class="layer-tech">PyMuPDF · python-docx · openpyxl · LangChain Splitter</div>
+        <div class="layer-desc">يستقبل ملفاتك، يفرغ نصوصها، ويقطعها إلى فقرات صغيرة مترابطة (Chunks) مع حفظ عنوان الملف ورقم الصفحة ومعرف فريد لكل جزء.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">سير العمل (End-to-End Workflow)</h3>
+  <p>عند رفع مستند عبر تليجرام أو Streamlit، يستخرج <b>PyMuPDF</b> النص ويقطّعه <b>LangChain Splitter</b> لأجزاء دلالية مع رقم الصفحة. ثم يحوّل <b>Gemini</b> كل جزء لمتجه 768-أبعاد يُخزَّن في <b>Supabase pgvector</b> مع فهرس HNSW. عند طرح سؤال، يُسترجع أعلى K أجزاء مطابقة (cosine similarity)، ويمررها <b>Gemini 1.5 Flash</b> مع أمر دقيق: "أجب عن السؤال بناءً على المصادر فقط وذكر اسم الملف ورقم الصفحة".</p>
+
+  <div class="foot-bar">
+    <span>Vault-ZeroBaran · White Paper</span>
+    <span>© 2025 · Proprietary</span>
+  </div>
+</section>
+
+<!-- ============ PAGE 4 — EXAMPLE + RIGHTS ============ -->
+<section class="page">
+  <div class="page-head">
+    <div class="crumb">04 / EXAMPLE · FREE TIER</div>
+    <div class="page-num">صفحة 4 / 5</div>
+  </div>
+
+  <h2 class="section">مثال حيّ على الإجابة</h2>
+  <p>عندما ترفع عقد شراكة بصيغة PDF ثم تسأل البوت: "ما هي نسبة الأرباح المقررة للشريك؟" — تكون الإجابة الفورية كالتالي:</p>
+
+  <pre class="code"><span class="c">// Query:  ما هي نسبة الأرباح المقررة للشريك؟</span>
+<span class="c">// Backend: gemini-1.5-flash · top_k=5</span>
+
+💡 <span class="k">الإجابة:</span>
+بناءً على شروط العقد المبرم مع الشريك (س)، فإن نسبة
+الأرباح المقررة هي <span class="s">25%</span>، تسوية سنوية
+في نهاية كل سنة مالية.
+
+📌 <span class="k">المصادر:</span>
+  1. 📄 <span class="s">Partnership_Contract_2025.pdf</span>
+     — صفحة 4 — البند 2  (تطابق دلالي: 92%)
+  2. 📄 <span class="s">Partnership_Contract_2025.pdf</span>
+     — صفحة 7 — البند 5  (تطابق دلالي: 78%)
+
+— <span class="c">powered by Vault-ZeroBaran (gemini)</span></pre>
+
+  <h3 class="sub">حدود الطبقة المجانية (Free Tier Limits)</h3>
+  <table>
+    <thead>
+      <tr><th>الخدمة</th><th>الحد المجاني</th><th>كافٍ لـ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Gemini API</td><td>1500 طلب/يوم · 5M توكن/شهر</td><td>مؤسسة صغيرة + متوسطة</td></tr>
+      <tr><td>Supabase</td><td>500MB تخزين · 50K صف شهرياً</td><td>~50,000 جزء دلالي</td></tr>
+      <tr><td>GitHub Actions</td><td>2000 دقيقة/شهر (عام)</td><td>جدولة كل 6 ساعات</td></tr>
+      <tr><td>Groq</td><td>~30 طلب/دقيقة</td><td>احتياطي عند فشل Gemini</td></tr>
+      <tr><td>Telegram Bot API</td><td>غير محدود عملياً</td><td>كل المستخدمين</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">حقوق الملكية</h3>
+  <p>هذا المشروع <b>"Vault-ZeroBaran"</b> عمل فكري أصلي محمي بترخيص proprietary يحفظ جميع الحقوق لمؤلفه. يُسمح بالاستخدام الشخصي والداخلي فقط؛ يُمنع إعادة البيع أو إزالة اسم المؤلف دون إذن كتابي. تفاصيل كاملة في ملف <code>LICENSE</code>.</p>
+</section>
+
+<!-- ============ PAGE 5 — CLOSING / CONTACT ============ -->
+<section class="page">
+  <div class="page-head">
+    <div class="crumb">05 / SUPPORT · COPYRIGHT</div>
+    <div class="page-num">صفحة 5 / 5</div>
+  </div>
+
+  <h2 class="section">الدعم وحقوق الملكية</h2>
+  <p class="lead">مشروع Vault-ZeroBaran عمل فكري أصلي محمي بترخيص proprietary يحفظ جميع الحقوق لمؤلفه. يُسمح بالاستخدام الشخصي والداخلي للمؤسسات والأفراد فقط؛ يُمنع إعادة البيع أو الترخيص التجاري أو إزالة اسم المؤلف من الواجهات والبوت دون إذن كتابي صريح. التفاصيل الكاملة في ملف LICENSE المرفق مع المشروع.</p>
+
+  <div style="background: var(--bg2); border: 1px solid var(--line); border-radius: 10px; padding: 8mm; margin-top: 6mm;">
+    <div style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 10pt; margin-bottom: 4mm; letter-spacing: 2px;">CONTACT · SUPPORT</div>
+    <div style="font-size: 13pt; color: var(--text); line-height: 2.2;">
+      <div><b style="color: var(--accent2); display: inline-block; width: 28mm;">المؤلف:</b> Baran Avisat</div>
+      <div><b style="color: var(--accent2); display: inline-block; width: 28mm;">البريد:</b> Baranavisat@gmail.com</div>
+      <div><b style="color: var(--accent2); display: inline-block; width: 28mm;">واتساب:</b> +90 531 326 37 22</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 8mm; padding: 5mm 6mm; background: linear-gradient(135deg, rgba(6,182,212,.08), rgba(99,102,241,.08)); border-radius: 8px; border-right: 3px solid var(--accent);">
+    <div style="font-size: 11pt; color: var(--text); line-height: 1.7;">
+      <b>تم حفظ هذا المشروع (التاسع عشر) في سجلات قاعدة بيانات الابتكار البرمجي بنجاح تام لضمان عدم تكراره.</b>
+    </div>
+  </div>
+
+  <div style="margin-top: 14mm; text-align: center; padding-top: 8mm; border-top: 1px solid var(--line);">
+    <div style="font-family: 'Cairo', sans-serif; font-weight: 900; font-size: 32pt; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+      Vault-ZeroBaran
+    </div>
+    <div style="color: var(--text-mute); font-size: 10pt; margin-top: 3mm; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px;">
+      SELF-KNOWLEDGE BRAIN · 100% FREE TECH STACK
+    </div>
+    <div style="color: var(--text-mute); font-size: 9pt; margin-top: 6mm;">
+      © 2025 Baran Avisat — All rights reserved · Proprietary License
+    </div>
+  </div>
+
+  <div class="foot-bar">
+    <span>Vault-ZeroBaran · White Paper · End</span>
+    <span>© 2025 · All rights reserved</span>
+  </div>
+</section>
+
+</body>
+</html>

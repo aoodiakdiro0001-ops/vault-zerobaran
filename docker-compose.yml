@@ -1,0 +1,38 @@
+# ============================================================
+#  Vault-ZeroBaran — Docker Compose
+#  One command to run UI + Telegram bot together.
+# ============================================================
+version: "3.9"
+
+services:
+  vault-ui:
+    build: .
+    image: vault-zerobaran:latest
+    container_name: vault-ui
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    command:
+      - streamlit
+      - run
+      - ui/streamlit_app.py
+      - --server.port=8501
+      - --server.address=0.0.0.0
+      - --browser.gatherUsageStats=false
+
+  vault-bot:
+    build: .
+    image: vault-zerobaran:latest
+    container_name: vault-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env:ro
+    command: ["python", "-m", "bot.telegram_bot"]
+    depends_on:
+      - vault-ui

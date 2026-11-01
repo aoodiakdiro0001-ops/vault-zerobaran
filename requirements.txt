@@ -1,0 +1,42 @@
+# ============================================================
+#  Vault-ZeroBaran — Self-Knowledge Brain for Documents
+#  100% Free Tech Stack — Dependencies
+# ============================================================
+
+# --- Document ingestion & parsing ---
+PyMuPDF==1.24.10              # PDF extraction (fitz)
+python-docx==1.1.2            # DOCX extraction
+openpyxl==3.1.5               # XLSX extraction
+pandas==2.2.3                 # CSV / tabular data
+chardet==5.2.0                # Encoding detection for TXT
+
+# --- Text chunking & LangChain core ---
+langchain==0.3.7
+langchain-core==0.3.15
+langchain-text-splitters==0.3.2
+
+# --- Vector DB (Supabase + pgvector) ---
+supabase==2.7.4               # Supabase Python client
+psycopg2-binary==2.9.10       # Direct Postgres fallback
+numpy==1.26.4                 # Vector math
+
+# --- AI / LLM / Embeddings ---
+google-generativeai==0.8.3    # Gemini API (embeddings + chat)
+groq==0.11.0                  # Groq free-tier LLM (alternative)
+
+# --- Telegram Bot ---
+python-telegram-bot==21.6     # Telegram Bot API
+
+# --- Streamlit Dashboard ---
+streamlit==1.40.1             # Web UI
+streamlit-chat==0.2.0         # Chat UI components
+extra-streamlit-components==0.1.71
+
+# --- Utilities ---
+python-dotenv==1.0.1          # .env loader
+requests==2.32.3              # HTTP
+pydantic==2.9.2               # Settings validation
+loguru==0.7.2                 # Logging
+tqdm==4.66.6                  # Progress bars
+tenacity==9.0.0               # Retry logic
+tiktoken==0.8.0               # Token counting
