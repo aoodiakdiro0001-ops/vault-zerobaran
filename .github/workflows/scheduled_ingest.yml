@@ -41,11 +41,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # =====================================================
+      #  Supabase secrets are required by every step below.
+      #  If absent, report and skip instead of failing the run.
+      #  (secrets context is unavailable inside `if` -> use env)
+      # =====================================================
+      - name: Check Supabase config
+        id: db
+        env:
+          SUPABASE_URL:   ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY:   ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_KEY" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "OK: Supabase configured"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::SUPABASE_URL / SUPABASE_KEY not set - skipping DB steps"
+            {
+              echo "## Database steps skipped"
+              echo ""
+              echo "Missing secrets: SUPABASE_URL, SUPABASE_KEY"
+              echo ""
+              echo "Add them at: Settings -> Secrets and variables -> Actions"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: 🗄️ Initialize Supabase schema
+        if: steps.db.outputs.configured == 'true'
         run: |
           python scripts/ingest_folder.py --init-db
 
       - name: 📂 Sync uploaded files (from repo ./data/uploads)
+        if: steps.db.outputs.configured == 'true'
         run: |
           # Place new files under ./data/uploads before pushing,
           # or use a separate data branch.
@@ -58,6 +86,7 @@ jobs:
           fi
 
       - name: 📊 Print vault statistics
+        if: steps.db.outputs.configured == 'true'
         run: |
           python - <<'EOF'
           import sys

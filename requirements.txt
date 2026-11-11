@@ -36,6 +36,7 @@ extra-streamlit-components==0.1.71
 python-dotenv==1.0.1          # .env loader
 requests==2.32.3              # HTTP
 pydantic==2.9.2               # Settings validation
+pydantic-settings==2.7.1      # BaseSettings — imported by config/settings.py
 loguru==0.7.2                 # Logging
 tqdm==4.66.6                  # Progress bars
 tenacity==9.0.0               # Retry logic
