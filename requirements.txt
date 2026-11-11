@@ -29,7 +29,7 @@ python-telegram-bot==21.6     # Telegram Bot API
 
 # --- Streamlit Dashboard ---
 streamlit==1.40.1             # Web UI
-streamlit-chat==0.2.0         # Chat UI components
+streamlit-chat==0.1.1         # Chat UI components (0.2.0 does not exist on PyPI)
 extra-streamlit-components==0.1.71
 
 # --- Utilities ---
